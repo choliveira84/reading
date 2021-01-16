@@ -60,7 +60,7 @@ class LivroServiceImpl implements LivroService {
     }
 
     private Livro mapearParaEntidade(LivroPostDTO dto) {
-        return new Livro(null, dto.getCapa(), dto.getTitulo(), dto.getIsbn(), dto.getAutor(), dto.getNumeroPagina(),
+        return new Livro(dto.getCapa(), dto.getTitulo(), dto.getIsbn(), dto.getAutor(), dto.getNumeroPagina(),
                 dto.getAnoLancamento());
     }
 

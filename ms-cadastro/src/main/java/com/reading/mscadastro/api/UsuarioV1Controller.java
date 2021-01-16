@@ -26,14 +26,14 @@ public class UsuarioV1Controller {
     private UsuarioService service;
 
     @ApiResponses(value = { @ApiResponse(code = 200, message = "DTO com o usuário"),
-            @ApiResponse(code = 404, message = "Usuário não encontrato"), })
+            @ApiResponse(code = 404, message = "Usuário não encontrato") })
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioDTO> buscar(@PathVariable Long id) {
         // log
         return ResponseEntity.ok().body(service.buscar(id));
     }
 
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "Paginação do resultado"), })
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Paginação do resultado") })
     @GetMapping
     public ResponseEntity<List<UsuarioDTO>> buscar(Pageable pageable) {
         // log

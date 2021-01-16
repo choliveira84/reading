@@ -21,3 +21,8 @@ INSERT INTO USUARIO(CIDADE,EMAIL,FOTO,NOME,PAIS) VALUES ('Recife','barbara@gmail
 INSERT INTO USUARIO(CIDADE,EMAIL,FOTO,NOME,PAIS) VALUES ('Recife','snow@gmail.com', 'https://media-exp1.licdn.com/dms/image/C5603AQGs2CesBwvnqw/profile-displayphoto-shrink_100_100/0/1581903005105?e=1616025600&v=beta&t=v3vBbhEn6EkSDCW7SlBeYCOJZ5fx3YM5Fjb3h6IAuZM', 'Snow Paçoca', 'Brasil');
 INSERT INTO USUARIO(CIDADE,EMAIL,FOTO,NOME,PAIS) VALUES ('Recife','fernando@gmail.com', 'https://media-exp1.licdn.com/dms/image/C5603AQGs2CesBwvnqw/profile-displayphoto-shrink_100_100/0/1581903005105?e=1616025600&v=beta&t=v3vBbhEn6EkSDCW7SlBeYCOJZ5fx3YM5Fjb3h6IAuZM', 'Fernando Fernandes Ferreira', 'Brasil');
 INSERT INTO USUARIO(CIDADE,EMAIL,FOTO,NOME,PAIS) VALUES ('Recife','amaro@gmail.com', 'https://media-exp1.licdn.com/dms/image/C5603AQGs2CesBwvnqw/profile-displayphoto-shrink_100_100/0/1581903005105?e=1616025600&v=beta&t=v3vBbhEn6EkSDCW7SlBeYCOJZ5fx3YM5Fjb3h6IAuZM', 'Amaro Amora Amores', 'Brasil');
+
+INSERT INTO RESENHA(DESCRICAO, TITULO, USUARIO_ID, LIVRO_ID) VALUES ('Livro muito bom, mas cansativo', 'Livro Grande', 1, 1);
+INSERT INTO RESENHA(DESCRICAO, TITULO, USUARIO_ID, LIVRO_ID) VALUES ('Livro super completo', 'Merecia filme', 1, 2);
+INSERT INTO RESENHA(DESCRICAO, TITULO, USUARIO_ID, LIVRO_ID) VALUES ('Livro de fácil entendimento', 'Física para Leigos', 1, 3);
+INSERT INTO RESENHA(DESCRICAO, TITULO, USUARIO_ID, LIVRO_ID) VALUES ('Livro de fácil entendimento para leigos', 'Emocionante', 2, 2);
