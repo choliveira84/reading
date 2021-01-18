@@ -10,6 +10,8 @@ import com.reading.mscadastro.application.dto.ResenhaDTO;
 import com.reading.mscadastro.application.dto.ResenhaPostDTO;
 import com.reading.mscadastro.domain.services.ResenhaService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +30,7 @@ import io.swagger.annotations.ApiResponses;
 @RestController
 @RequestMapping("/api/resenhas")
 public class ResenhaController {
+    private final Logger log = LoggerFactory.getLogger(ResenhaController.class);
 
     @Autowired
     private ResenhaService service;
@@ -39,7 +42,8 @@ public class ResenhaController {
     })
     @PostMapping
     public ResponseEntity<ResenhaDTO> criar(@Valid @RequestBody ResenhaPostDTO dto) throws URISyntaxException {
-        // log
+        log.debug("Requisição para criar uma resenha a partir do DTO {}", dto);
+
         ResenhaDTO resenhaSalva = service.criar(dto);
 
         HttpHeaders headers = new HttpHeaders();
@@ -52,7 +56,8 @@ public class ResenhaController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Paginação do resultado") })
     @GetMapping
     public ResponseEntity<List<ResenhaDTO>> buscar(Pageable pageable) {
-        // log
+        log.debug("Requisição para buscar a resenha");
+
         Page<ResenhaDTO> page = service.buscar(pageable);
 
         HttpHeaders headers = new HttpHeaders();
@@ -65,7 +70,8 @@ public class ResenhaController {
             @ApiResponse(code = 404, message = "Resenha não encontrada") })
     @GetMapping("/{id}")
     public ResponseEntity<ResenhaDTO> buscar(@PathVariable Long id) {
-        // log
+        log.debug("Requisição para buscar a resenha a partir do id: {}", id);
+
         return ResponseEntity.ok().body(service.buscar(id));
     }
 

@@ -28,7 +28,6 @@ class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public UsuarioDTO buscar(Long id) {
-        // log
         Optional<Usuario> usuarioOptional = repository.findById(id); // NOSONAR
 
         if (!usuarioOptional.isPresent()) {
@@ -40,7 +39,6 @@ class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public Page<UsuarioDTO> buscar(Pageable pageable) {
-        // log
         PageRequest page = PageRequest.of((int) pageable.getOffset(), pageable.getPageSize(),
                 Sort.by(Direction.ASC, "nome"));
 

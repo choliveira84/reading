@@ -50,7 +50,7 @@ class LivroControllerTest {
 
 	private static final Long DEFAULT_PAGINA = 1l;
 
-	private static final Integer DEFAULT_ANO_LANCAMENTO = 1;
+	private static final String DEFAULT_ANO_LANCAMENTO = "AAAAAAAAAA";
 
 	@Autowired
 	private LivroRepository repository;

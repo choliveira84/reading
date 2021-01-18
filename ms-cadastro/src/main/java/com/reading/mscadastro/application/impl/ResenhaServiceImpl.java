@@ -43,13 +43,11 @@ class ResenhaServiceImpl implements ResenhaService {
     @Transactional
     @Override
     public ResenhaDTO criar(ResenhaPostDTO dto) {
-        // log
         return mapearParaDTO(repository.save(mapearParaEntidade(dto)));
     }
 
     @Override
     public Page<ResenhaDTO> buscar(Pageable pageable) {
-        // log
         PageRequest page = PageRequest.of((int) pageable.getOffset(), pageable.getPageSize(),
                 Sort.by(Direction.ASC, "titulo"));
 
@@ -58,7 +56,6 @@ class ResenhaServiceImpl implements ResenhaService {
 
     @Override
     public ResenhaDTO buscar(Long id) {
-        // log
         Optional<Resenha> ResenhaOptional = repository.findById(id); // NOSONAR
 
         if (!ResenhaOptional.isPresent()) {

@@ -6,10 +6,14 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.reading.mscadastro.application.dto.LivroConsultaExternaDTO;
+import com.reading.mscadastro.application.dto.LivroCriterioDTO;
 import com.reading.mscadastro.application.dto.LivroDTO;
 import com.reading.mscadastro.application.dto.LivroPostDTO;
 import com.reading.mscadastro.domain.services.LivroService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +33,8 @@ import io.swagger.annotations.ApiResponses;
 @RequestMapping("/api/livros")
 public class LivroController {
 
+    private final Logger log = LoggerFactory.getLogger(LivroController.class);
+
     @Autowired
     private LivroService service;
 
@@ -40,21 +46,22 @@ public class LivroController {
     })
     @PostMapping
     public ResponseEntity<LivroDTO> criar(@Valid @RequestBody LivroPostDTO dto) throws URISyntaxException {
-        // log
+        log.debug("Requisição para criar um livro a partir do DTO {}", dto);
+
         LivroDTO livroSalvo = service.criar(dto);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-mscadastro-created", "Livro criado.");
 
-        return ResponseEntity.created(new URI("/api/livros/" + livroSalvo.getId())).headers(headers)
-                .body(livroSalvo);
+        return ResponseEntity.created(new URI("/api/livros/" + livroSalvo.getId())).headers(headers).body(livroSalvo);
     }
 
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Paginação do resultado") })
     @GetMapping
-    public ResponseEntity<List<LivroDTO>> buscar(Pageable pageable) {
-        // log
-        Page<LivroDTO> page = service.buscar(pageable);
+    public ResponseEntity<List<LivroDTO>> buscar(LivroCriterioDTO dto, Pageable pageable) {
+        log.debug("Requisição para buscar o livro a partir do criterio: {}, página {}", dto, pageable);
+
+        Page<LivroDTO> page = service.buscar(dto, pageable);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-Total-Count", Long.toString(page.getTotalElements()));
@@ -62,11 +69,21 @@ public class LivroController {
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Lista contendo livros de acordo com o critério passado pelo usuário") })
+    @GetMapping("/consulta-externa/{criterio}")
+    public ResponseEntity<List<LivroConsultaExternaDTO>> buscar(@PathVariable String criterio) {
+        log.debug("Requisição para buscar livros a partir do critério {}", criterio);
+
+        return ResponseEntity.ok().body(service.buscar(criterio));
+    }
+
     @ApiResponses(value = { @ApiResponse(code = 200, message = "DTO com o livro"),
             @ApiResponse(code = 404, message = "Livro não encontrato") })
     @GetMapping("/{id}")
     public ResponseEntity<LivroDTO> buscar(@PathVariable Long id) {
-        // log
+        log.debug("Requisição para buscar o livro a partir do id: {}", id);
+
         return ResponseEntity.ok().body(service.buscar(id));
     }
 

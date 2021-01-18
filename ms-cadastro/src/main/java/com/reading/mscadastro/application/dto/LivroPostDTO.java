@@ -41,7 +41,7 @@ public class LivroPostDTO implements Serializable {
     @PositiveOrZero(message = "O número de páginas está inválido")
     private Long numeroPagina;
 
-    @PositiveOrZero(message = "O ano de lançamento está inválido")
-    private Integer anoLancamento;
+    @NotEmpty(message = "O ano de lançamento está inválido")
+    private String anoLancamento;
 
 }

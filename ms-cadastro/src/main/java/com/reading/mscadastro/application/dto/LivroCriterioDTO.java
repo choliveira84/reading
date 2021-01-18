@@ -8,33 +8,21 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-/**
- * Utilizado como response para o usuário
- */
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @ToString
-public class LivroDTO implements Serializable {
+public class LivroCriterioDTO implements Serializable {
 
     /**
      *
      */
     private static final long serialVersionUID = 1L;
 
-    private Long id;
-
-    private String capa;
-
     private String titulo;
 
     private String autor;
 
     private String isbn;
-
-    private Long numeroPagina;
-
-    private String anoLancamento;
-
 }

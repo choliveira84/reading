@@ -57,7 +57,7 @@ public class Livro implements Serializable {
 
     @PositiveOrZero(message = "O ano de lançamento está inválido")
     @Column(nullable = false)
-    private Integer anoLancamento;
+    private String anoLancamento;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "livro")
     private Set<Resenha> resenhas = new HashSet<>();
@@ -68,7 +68,7 @@ public class Livro implements Serializable {
             @NotEmpty(message = "O isbn está inválido") String isbn,
             @NotEmpty(message = "O nome do autor está inválida") String autor,
             @PositiveOrZero(message = "O número de páginas está inválido") Long numeroPagina,
-            @PositiveOrZero(message = "O ano de lançamento está inválido") Integer anoLancamento) {
+            @PositiveOrZero(message = "O ano de lançamento está inválido") String anoLancamento) {
         this.capa = capa;
         this.titulo = titulo;
         this.isbn = isbn;
@@ -83,7 +83,7 @@ public class Livro implements Serializable {
             @NotEmpty(message = "O isbn está inválido") String isbn,
             @NotEmpty(message = "O nome do autor está inválida") String autor,
             @PositiveOrZero(message = "O número de páginas está inválido") Long numeroPagina,
-            @PositiveOrZero(message = "O ano de lançamento está inválido") Integer anoLancamento) {
+            @PositiveOrZero(message = "O ano de lançamento está inválido") String anoLancamento) {
         this(capa, titulo, isbn, autor, numeroPagina, anoLancamento);
         this.id = id;
     }

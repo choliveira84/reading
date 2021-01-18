@@ -9,21 +9,19 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * Utilizado como response para o usuário
+ * Utilizado como response para o usuário quando for buscado externamente
  */
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @ToString
-public class LivroDTO implements Serializable {
+public class LivroConsultaExternaDTO implements Serializable {
 
     /**
      *
      */
     private static final long serialVersionUID = 1L;
-
-    private Long id;
 
     private String capa;
 
