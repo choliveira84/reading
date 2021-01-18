@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 class LivroServiceImpl implements LivroService {
@@ -28,6 +29,7 @@ class LivroServiceImpl implements LivroService {
     @Autowired
     private ModelMapper mapper;
 
+    @Transactional
     @Override
     public LivroDTO criar(LivroPostDTO dto) {
         // log

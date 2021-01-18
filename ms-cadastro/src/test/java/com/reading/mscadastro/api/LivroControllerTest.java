@@ -36,7 +36,7 @@ import org.springframework.validation.Validator;
 @AutoConfigureMockMvc
 class LivroControllerTest {
 
-	private static final String API_V1_LIVROS = "/api/v1/livros";
+	private static final String API_V1_LIVROS = "/api/livros";
 
 	private static final String DEFAULT_NOME = "AAAAAAAAAA";
 
@@ -74,13 +74,13 @@ class LivroControllerTest {
 	private ResourceExceptionHandler handler;
 
 	@Autowired
-	private LivroV1Controller livroV1Controller;
+	private LivroController livroController;
 
 	@BeforeEach
 	public void setUp() {
 		MockitoAnnotations.openMocks(this);
 
-		this.restMockMvc = MockMvcBuilders.standaloneSetup(livroV1Controller)
+		this.restMockMvc = MockMvcBuilders.standaloneSetup(livroController)
 				.setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(handler)
 				.setMessageConverters(jacksonMessageConverter).setValidator(validator).build();
 	}

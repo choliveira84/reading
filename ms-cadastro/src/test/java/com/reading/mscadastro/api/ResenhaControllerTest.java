@@ -36,7 +36,7 @@ import org.springframework.validation.Validator;
 @AutoConfigureMockMvc
 class ResenhaControllerTest {
 
-	private static final String API_V1_RESENHAS = "/api/v1/resenhas";
+	private static final String API_V1_RESENHAS = "/api/resenhas";
 
 	private static final String DEFAULT_DESCRICAO = "AAAAAAAAAA";
 
@@ -68,7 +68,7 @@ class ResenhaControllerTest {
 	private ResourceExceptionHandler handler;
 
 	@Autowired
-	private ResenhaV1Controller controller;
+	private ResenhaController controller;
 
 	@BeforeEach
 	public void setUp() {

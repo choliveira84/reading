@@ -28,7 +28,7 @@ import org.springframework.validation.Validator;
 @AutoConfigureMockMvc
 class UsuarioControllerTest {
 
-	private static final String API_V1_USUARIOS = "/api/v1/usuarios";
+	private static final String API_V1_USUARIOS = "/api/usuarios";
 
 	private static final String DEFAULT_NOME = "AAAAAAAAAA";
 
@@ -59,7 +59,7 @@ class UsuarioControllerTest {
 	private ResourceExceptionHandler handler;
 
 	@Autowired
-	private UsuarioV1Controller controller;
+	private UsuarioController controller;
 
 	@BeforeEach
 	public void setUp() {
