@@ -38,11 +38,13 @@ class LivroServiceImpl implements LivroService {
 
     private static final String RAWTYPES = "rawtypes";
 
+    private static final String VALUE = "value";
+
     private static final String PROP_NULA = "O tipo da propriedade está nula";
 
     private final Logger log = LoggerFactory.getLogger(LivroServiceImpl.class);
 
-    private static final String URL_CULTURA = "https://www3.livrariacultura.com.br/api/catalog_system/pub/products/search/?fq=productName:";
+    private static final String URL_BIGGLABS = "https://search.biggylabs.com.br/search-api/v1/livrariacultura/autocomplete/suggestion_products?term=";
 
     @Autowired
     private RestTemplate restTemplate;
@@ -74,10 +76,10 @@ class LivroServiceImpl implements LivroService {
             throw new BadRequestException("O critério da busca deve ter, pelo menos, 3 caracters");
         }
 
-        String busca = URL_CULTURA + criterio;
+        String busca = URL_BIGGLABS + criterio;
 
         try {
-            var lista = (List<Object>) restTemplate.getForObject(busca, Object.class);
+            LinkedHashMap<String, Object> lista = restTemplate.getForObject(busca, LinkedHashMap.class);
 
             if (Objects.isNull(lista)) {
                 return Collections.emptyList();
@@ -87,23 +89,18 @@ class LivroServiceImpl implements LivroService {
 
             List<LivroConsultaExternaDTO> retorno = new ArrayList<>();
 
-            lista.forEach(item -> {
+            var products = (List<Object>) lista.get("products");
+
+            products.forEach(produto -> {
                 try {
-                    LinkedHashMap object = (LinkedHashMap) item; // NOSONAR
+                    var object = (LinkedHashMap) produto;
 
                     LivroConsultaExternaDTO livro = new LivroConsultaExternaDTO();
 
-                    var titulo = object.get("productName");
-                    var ano = object.get("Ano");
-                    var isbn = object.get("ISBN");
-                    var autor = object.get("Colaborador");
-                    var items = object.get("items");
+                    livro.setTitulo(obterPropString(object.get("name")));
+                    livro.setCapa(obterCapa(object.get("images")));
 
-                    livro.setAnoLancamento(obterPropString(ano));
-                    livro.setTitulo(obterPropString(titulo));
-                    livro.setIsbn(obterPropString(isbn));
-                    livro.setAutor(obterPropString(autor));
-                    livro.setCapa(obterCapa(items));
+                    obterPropriedades(object.get("attributes"), livro);
 
                     retorno.add(livro);
                 } catch (Exception e) {
@@ -160,7 +157,7 @@ class LivroServiceImpl implements LivroService {
         } else if (prop instanceof Integer) {
             return (String) prop;
         }
-        
+
         log.warn(PROP_NULA);
         return "-";
     }
@@ -171,22 +168,41 @@ class LivroServiceImpl implements LivroService {
             Object list = ((List) items).get(0);
 
             if (list != null) {
-                Object item = ((LinkedHashMap) list).get("images");
+                Object item = ((LinkedHashMap) list).get(VALUE);
 
                 if (item != null) {
-                    Object innerItem = ((List) item).get(0);
-
-                    if (innerItem != null) {
-                        var prop = ((LinkedHashMap) innerItem).get("imageUrl");
-
-                        return obterPropString(prop);
-                    }
+                    return (String) item;
                 }
             }
         }
 
         log.warn(PROP_NULA);
         return "http://url.nula.com";
+    }
+
+    @SuppressWarnings(value = { RAWTYPES, UNCHECKED })
+    private void obterPropriedades(Object attributes, LivroConsultaExternaDTO livro) {
+        var att = new ArrayList<LinkedHashMap>(); // NOSONAR
+
+        att.addAll((ArrayList) attributes);
+
+        att.forEach(item -> {
+            String key = (String) item.get("key");
+
+            if ("ano".equals(key)) {
+                String value = (String) item.get(VALUE);
+                livro.setAnoLancamento(value);
+            } else if ("autor".equals(key)) {
+                String labelValue = (String) item.get("labelValue");
+                livro.setAutor(labelValue);
+            } else if ("isbn".equals(key)) {
+                String value = (String) item.get(VALUE);
+                livro.setIsbn(value);
+            } else if ("paginas".equals(key)) {
+                Long value = Long.parseLong((String) item.get(VALUE));
+                livro.setNumeroPagina(value);
+            }
+        });
     }
 
 }

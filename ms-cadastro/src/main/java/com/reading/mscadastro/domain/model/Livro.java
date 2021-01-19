@@ -55,7 +55,7 @@ public class Livro implements Serializable {
     @Column(nullable = false)
     private Long numeroPagina;
 
-    @PositiveOrZero(message = "O ano de lançamento está inválido")
+    @NotEmpty(message = "O ano de lançamento está inválido")
     @Column(nullable = false)
     private String anoLancamento;
 

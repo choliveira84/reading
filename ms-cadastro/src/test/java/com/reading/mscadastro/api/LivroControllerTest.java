@@ -134,6 +134,12 @@ class LivroControllerTest {
 	}
 
 	@Test
+	@DisplayName("Tenta buscar o livro por criteria")
+	void teste06() throws Exception {
+		restMockMvc.perform(get(API_V1_LIVROS + "/consulta-externa/{criterio}", "java")).andExpect(status().isOk());
+	}
+
+	@Test
 	@DisplayName("Tenta buscar o livro pelo id")
 	void teste05() throws Exception {
 		Livro livro = repository.findAll().stream().findAny().get(); // NOSONAR
