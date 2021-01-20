@@ -1,4 +1,4 @@
-package com.reading.mscadastro.infrastructure.config;
+package com.reading.msleitura.infrastructure.config;
 
 public class Constants {
 
