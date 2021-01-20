@@ -2,8 +2,10 @@ package com.reading.mscadastro.application.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -14,6 +16,9 @@ import com.reading.mscadastro.application.dto.LivroPostDTO;
 import com.reading.mscadastro.domain.model.Livro;
 import com.reading.mscadastro.domain.repository.LivroRepository;
 import com.reading.mscadastro.domain.services.LivroService;
+import com.reading.mscadastro.infrastructure.config.Constants;
+import com.reading.mscadastro.infrastructure.events.interfaces.ApplicationEvent;
+import com.reading.mscadastro.infrastructure.events.interfaces.EventBus;
 import com.reading.mscadastro.infrastructure.exceptions.BadRequestException;
 import com.reading.mscadastro.infrastructure.exceptions.EntityAlreadyExistsException;
 import com.reading.mscadastro.infrastructure.exceptions.EntityNotFoundException;
@@ -55,6 +60,8 @@ class LivroServiceImpl implements LivroService {
     @Autowired
     private ModelMapper mapper;
 
+    private EventBus eventBus;
+
     @Transactional
     @Override
     public LivroDTO criar(LivroPostDTO dto) {
@@ -64,9 +71,24 @@ class LivroServiceImpl implements LivroService {
             throw new EntityAlreadyExistsException(String.format("Já existe um livro com o ISBN %s", dto.getIsbn()));
         }
 
-        return mapearParaDTO(repository.save(mapearParaEntidade(dto)));
+        LivroDTO livroSalvo = mapearParaDTO(repository.save(mapearParaEntidade(dto)));
+
+        Map<String, String> payload = new HashMap<>();
+        payload.put("livro_id", String.valueOf(livroSalvo.getId()));
+        payload.put("livro_titulo", livroSalvo.getTitulo());
+        
+        ApplicationEvent event = new ApplicationEvent(payload) {
+            @Override
+            public String getType() {
+                return Constants.EVENT_LIVRO_SALVO;
+            }
+        };
+        this.eventBus.publish(event);
+
+        return livroSalvo;
     }
 
+    // TODO: separar o download em outra classe
     @SuppressWarnings(value = { UNCHECKED, RAWTYPES })
     @Override
     public List<LivroConsultaExternaDTO> buscar(String criterio) {
@@ -137,6 +159,16 @@ class LivroServiceImpl implements LivroService {
         } else {
             return mapearParaDTO(livroOptional.get());
         }
+    }
+
+    @Override
+    public EventBus getEventBus() {
+        return eventBus;
+    }
+
+    @Override
+    public void setEventBus(EventBus eventBus) {
+        this.eventBus = eventBus;
     }
 
     private Livro mapearParaEntidade(LivroPostDTO dto) {

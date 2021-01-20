@@ -6,11 +6,12 @@ import com.reading.mscadastro.application.dto.LivroConsultaExternaDTO;
 import com.reading.mscadastro.application.dto.LivroCriterioDTO;
 import com.reading.mscadastro.application.dto.LivroDTO;
 import com.reading.mscadastro.application.dto.LivroPostDTO;
+import com.reading.mscadastro.infrastructure.events.service.ApplicationService;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public interface LivroService {
+public interface LivroService extends ApplicationService {
 
     LivroDTO criar(LivroPostDTO dto);
 

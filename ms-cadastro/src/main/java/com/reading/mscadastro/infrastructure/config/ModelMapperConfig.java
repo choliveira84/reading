@@ -1,4 +1,4 @@
-package com.reading.mscadastro.infrastructure;
+package com.reading.mscadastro.infrastructure.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

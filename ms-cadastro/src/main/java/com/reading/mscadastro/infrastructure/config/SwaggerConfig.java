@@ -1,4 +1,4 @@
-package com.reading.mscadastro.infrastructure;
+package com.reading.mscadastro.infrastructure.config;
 
 import java.util.ArrayList;
 import java.util.List;
