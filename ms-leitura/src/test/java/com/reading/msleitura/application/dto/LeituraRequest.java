@@ -1,7 +1,5 @@
 package com.reading.msleitura.application.dto;
 
-import java.time.LocalDate;
-
 import com.reading.msleitura.domain.model.Leitura.NotasLivro;
 import com.reading.msleitura.domain.model.Leitura.StatusLeitura;
 

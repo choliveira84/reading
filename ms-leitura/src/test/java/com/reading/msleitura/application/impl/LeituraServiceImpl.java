@@ -6,10 +6,8 @@ import com.reading.msleitura.application.dto.LeituraRequest;
 import com.reading.msleitura.application.dto.LeituraResponse;
 import com.reading.msleitura.domain.model.Leitura;
 import com.reading.msleitura.domain.model.Leitura.NotasLivro;
-import com.reading.msleitura.domain.model.Leitura.StatusLeitura;
 import com.reading.msleitura.domain.repository.LeituraRepository;
 import com.reading.msleitura.domain.services.LeituraService;
-import com.reading.msleitura.infrastructure.exceptions.BadRequestException;
 import com.reading.msleitura.infrastructure.exceptions.EntityNotFoundException;
 
 import org.modelmapper.ModelMapper;
