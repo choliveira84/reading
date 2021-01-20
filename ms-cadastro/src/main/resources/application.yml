@@ -1,5 +1,6 @@
 server:
-    port: ${PORT:0}
+    # port: ${PORT:0}
+    port: 8001
 
 eureka:
     client:
@@ -10,7 +11,7 @@ eureka:
 
 spring:
     application:
-        name: ms-livro
+        name: ms-cadastro
     h2:
         console:
             enabled: true

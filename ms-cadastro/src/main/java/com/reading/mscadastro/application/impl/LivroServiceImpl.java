@@ -2,10 +2,8 @@ package com.reading.mscadastro.application.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -16,9 +14,7 @@ import com.reading.mscadastro.application.dto.LivroPostDTO;
 import com.reading.mscadastro.domain.model.Livro;
 import com.reading.mscadastro.domain.repository.LivroRepository;
 import com.reading.mscadastro.domain.services.LivroService;
-import com.reading.mscadastro.infrastructure.config.Constants;
-import com.reading.mscadastro.infrastructure.events.interfaces.ApplicationEvent;
-import com.reading.mscadastro.infrastructure.events.interfaces.EventBus;
+import com.reading.mscadastro.infrastructure.events.CustomEvent;
 import com.reading.mscadastro.infrastructure.exceptions.BadRequestException;
 import com.reading.mscadastro.infrastructure.exceptions.EntityAlreadyExistsException;
 import com.reading.mscadastro.infrastructure.exceptions.EntityNotFoundException;
@@ -27,6 +23,7 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -38,6 +35,9 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 class LivroServiceImpl implements LivroService {
+
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
 
     private static final String UNCHECKED = "unchecked";
 
@@ -60,8 +60,6 @@ class LivroServiceImpl implements LivroService {
     @Autowired
     private ModelMapper mapper;
 
-    private EventBus eventBus;
-
     @Transactional
     @Override
     public LivroDTO criar(LivroPostDTO dto) {
@@ -73,17 +71,7 @@ class LivroServiceImpl implements LivroService {
 
         LivroDTO livroSalvo = mapearParaDTO(repository.save(mapearParaEntidade(dto)));
 
-        Map<String, String> payload = new HashMap<>();
-        payload.put("livro_id", String.valueOf(livroSalvo.getId()));
-        payload.put("livro_titulo", livroSalvo.getTitulo());
-        
-        ApplicationEvent event = new ApplicationEvent(payload) {
-            @Override
-            public String getType() {
-                return Constants.EVENT_LIVRO_SALVO;
-            }
-        };
-        this.eventBus.publish(event);
+        eventPublisher.publishEvent(new CustomEvent(livroSalvo));
 
         return livroSalvo;
     }
@@ -159,16 +147,6 @@ class LivroServiceImpl implements LivroService {
         } else {
             return mapearParaDTO(livroOptional.get());
         }
-    }
-
-    @Override
-    public EventBus getEventBus() {
-        return eventBus;
-    }
-
-    @Override
-    public void setEventBus(EventBus eventBus) {
-        this.eventBus = eventBus;
     }
 
     private Livro mapearParaEntidade(LivroPostDTO dto) {

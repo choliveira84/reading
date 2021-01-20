@@ -19,13 +19,11 @@ public class ResenhaDTO implements Serializable {
 
     private Long id;
 
-    private String descricao;
-
-    private String titulo;
-
     private Long usuarioId;
 
     private String usuarioNome;
+
+    private String titulo;
 
     private Long livroId;
 

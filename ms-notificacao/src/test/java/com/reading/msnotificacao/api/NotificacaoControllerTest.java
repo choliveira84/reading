@@ -53,6 +53,18 @@ class NotificacaoControllerTest {
 
 	private static final String DEFAULT_TITULO_RESENHA = "AAAAAAAAAA";
 
+	private static final String DEFAULT_CAPA = "http://www.capa.com";
+
+	private static final String DEFAULT_AUTOR = "AAAAAAAAAA";
+
+	private static final String DEFAULT_NOME_USUARIO = "AAAAAAAAAA";
+
+	private static final String DEFAULT_ISBN = "AAAAAAAAAA";
+
+	private static final Long DEFAULT_PAGINA = 1l;
+
+	private static final String DEFAULT_ANO_LANCAMENTO = "AAAAAAAAAA";
+
 	@Autowired
 	private NotificacaoReposity repository;
 
@@ -87,12 +99,13 @@ class NotificacaoControllerTest {
 	}
 
 	public static NotificacaoLivroPublicadoDTO criarLivro(EntityManager em) {
-		return new NotificacaoLivroPublicadoDTO(DEFAULT_TITULO_LIVRO, DEFAULT_ID_LIVRO);
+		return new NotificacaoLivroPublicadoDTO(DEFAULT_ID_LIVRO, DEFAULT_CAPA, DEFAULT_TITULO_LIVRO, DEFAULT_AUTOR,
+				DEFAULT_ISBN, DEFAULT_PAGINA, DEFAULT_ANO_LANCAMENTO);
 	}
 
 	public NotificacaoResenhaDTO criarResenha(EntityManager em) {
-		return new NotificacaoResenhaDTO(DEFAULT_ID_USUARIO, DEFAULT_TITULO_RESENHA, DEFAULT_ID_RESENHA,
-				DEFAULT_ID_LIVRO);
+		return new NotificacaoResenhaDTO(DEFAULT_ID_RESENHA, DEFAULT_ID_USUARIO, DEFAULT_NOME_USUARIO,
+				DEFAULT_TITULO_RESENHA, DEFAULT_ID_LIVRO, DEFAULT_TITULO_LIVRO);
 	}
 
 	@Test
@@ -148,8 +161,8 @@ class NotificacaoControllerTest {
 	@Transactional
 	public void getNotificacaoResenha() throws Exception {
 		// Initialize the database
-		Notificacao notificacao = repository.saveAndFlush(
-				new Notificacao(DEFAULT_TITULO_RESENHA, DEFAULT_ID_LIVRO, DEFAULT_ID_RESENHA, DEFAULT_ID_USUARIO));
+		Notificacao notificacao = repository.saveAndFlush(new Notificacao(DEFAULT_TITULO_RESENHA, DEFAULT_ID_LIVRO,
+				DEFAULT_ID_RESENHA, DEFAULT_ID_USUARIO, DEFAULT_NOME_USUARIO));
 
 		// Get the notificacao
 		restMockMvc.perform(get("/api/notificacoes/{id}", notificacao.getId())).andExpect(status().isOk())
@@ -166,8 +179,7 @@ class NotificacaoControllerTest {
 	@Transactional
 	public void getNotificacaoLivro() throws Exception {
 		// Initialize the database
-		Notificacao notificacao = repository.saveAndFlush(
-				new Notificacao(DEFAULT_TITULO_LIVRO, DEFAULT_ID_LIVRO));
+		Notificacao notificacao = repository.saveAndFlush(new Notificacao(DEFAULT_TITULO_LIVRO, DEFAULT_ID_LIVRO));
 
 		// Get the notificacao
 		restMockMvc.perform(get("/api/notificacoes/{id}", notificacao.getId())).andExpect(status().isOk())
@@ -189,8 +201,8 @@ class NotificacaoControllerTest {
 	@Transactional
 	public void deleteNotificacao() throws Exception {
 		// Initialize the database
-		Notificacao notificacao = repository.saveAndFlush(
-				new Notificacao(DEFAULT_TITULO_RESENHA, DEFAULT_ID_LIVRO, DEFAULT_ID_RESENHA, DEFAULT_ID_USUARIO));
+		Notificacao notificacao = repository.saveAndFlush(new Notificacao(DEFAULT_TITULO_RESENHA, DEFAULT_ID_LIVRO,
+				DEFAULT_ID_RESENHA, DEFAULT_ID_USUARIO, DEFAULT_NOME_USUARIO));
 
 		int databaseSizeBeforeDelete = repository.findAll().size();
 

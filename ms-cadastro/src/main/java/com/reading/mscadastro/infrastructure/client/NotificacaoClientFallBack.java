@@ -1,7 +1,7 @@
 package com.reading.mscadastro.infrastructure.client;
 
-import com.reading.mscadastro.infrastructure.client.request.NotificacaoLivroRequest;
-import com.reading.mscadastro.infrastructure.client.request.NotificacaoResenhaRequest;
+import com.reading.mscadastro.application.dto.LivroDTO;
+import com.reading.mscadastro.application.dto.ResenhaDTO;
 import com.reading.mscadastro.infrastructure.client.response.NotificacaoResponse;
 
 import org.slf4j.Logger;
@@ -16,15 +16,15 @@ public class NotificacaoClientFallBack implements NotificacaoClient {
     private final Logger log = LoggerFactory.getLogger(NotificacaoClientFallBack.class);
 
     @Override
-    public ResponseEntity<NotificacaoResponse> criar(NotificacaoResenhaRequest request) {
-        log.error("Houve um erro ao tentar criar uma notificação para a resenha de id {}", request.getIdLivro());
+    public ResponseEntity<NotificacaoResponse> criar(ResenhaDTO request) {
+        log.error("Houve um erro ao tentar criar uma notificação para a resenha de id {}", request.getId());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
     @Override
-    public ResponseEntity<NotificacaoResponse> criar(NotificacaoLivroRequest request) {
-        log.error("Houve um erro ao tentar criar uma notificação para o livro de id {}", request.getIdLivro());
+    public ResponseEntity<NotificacaoResponse> criar(LivroDTO request) {
+        log.error("Houve um erro ao tentar criar uma notificação para o livro de id {}", request.getId());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }

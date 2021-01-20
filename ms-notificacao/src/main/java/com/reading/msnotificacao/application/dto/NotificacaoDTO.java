@@ -34,8 +34,8 @@ public class NotificacaoDTO implements Serializable {
 
     private Long idUsuario;
 
-    private String tituloResenha;
+    private String nomeUsuario;
 
-    private String descricaoResenha;
+    private String tituloResenha;
 
 }

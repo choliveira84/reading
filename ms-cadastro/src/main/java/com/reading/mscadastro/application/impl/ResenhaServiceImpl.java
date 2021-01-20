@@ -1,7 +1,5 @@
 package com.reading.mscadastro.application.impl;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import com.reading.mscadastro.application.dto.LivroDTO;
@@ -15,13 +13,12 @@ import com.reading.mscadastro.domain.repository.ResenhaRepository;
 import com.reading.mscadastro.domain.services.LivroService;
 import com.reading.mscadastro.domain.services.ResenhaService;
 import com.reading.mscadastro.domain.services.UsuarioService;
-import com.reading.mscadastro.infrastructure.config.Constants;
-import com.reading.mscadastro.infrastructure.events.interfaces.ApplicationEvent;
-import com.reading.mscadastro.infrastructure.events.interfaces.EventBus;
+import com.reading.mscadastro.infrastructure.events.CustomEvent;
 import com.reading.mscadastro.infrastructure.exceptions.EntityNotFoundException;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,6 +29,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 class ResenhaServiceImpl implements ResenhaService {
+
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
 
     @Autowired
     private ResenhaRepository repository;
@@ -45,26 +45,12 @@ class ResenhaServiceImpl implements ResenhaService {
     @Autowired
     private LivroService livroService;
 
-    private EventBus eventBus;
-
     @Transactional
     @Override
     public ResenhaDTO criar(ResenhaPostDTO dto) {
         ResenhaDTO resenhaSalva = mapearParaDTO(repository.save(mapearParaEntidade(dto)));
 
-        Map<String, String> payload = new HashMap<>();
-        payload.put("resenha_id", String.valueOf(resenhaSalva.getId()));
-        payload.put("resenha_titulo", resenhaSalva.getTitulo());
-        payload.put("livro_id", String.valueOf(resenhaSalva.getLivroId()));
-        payload.put("usuario_id", String.valueOf(resenhaSalva.getUsuarioId()));
-
-        ApplicationEvent event = new ApplicationEvent(payload) {
-            @Override
-            public String getType() {
-                return Constants.EVENT_RESENHA_PUBLICADA;
-            }
-        };
-        this.eventBus.publish(event);
+        eventPublisher.publishEvent(new CustomEvent(resenhaSalva));
 
         return resenhaSalva;
     }
@@ -103,16 +89,6 @@ class ResenhaServiceImpl implements ResenhaService {
 
     private ResenhaDTO mapearParaDTO(Resenha resenha) {
         return mapper.map(resenha, ResenhaDTO.class);
-    }
-
-    @Override
-    public EventBus getEventBus() {
-        return eventBus;
-    }
-
-    @Override
-    public void setEventBus(EventBus eventBus) {
-        this.eventBus = eventBus;
     }
 
 }

@@ -41,6 +41,8 @@ public class Notificacao implements Serializable {
     @Positive
     private Long idUsuario;
 
+    private String nomeUsuario;
+
     @Positive
     private Long idResenha;
 
@@ -52,12 +54,13 @@ public class Notificacao implements Serializable {
         this.tipo = TiposNotificacao.LIVRO_PUBLICADO;
     }
 
-    public Notificacao(String tituloResenha, Long idLivro, Long idResenha, Long idUsuario) {
+    public Notificacao(String tituloResenha, Long idLivro, Long idResenha, Long idUsuario, String nomeUsuario) {
         this.tituloResenha = tituloResenha;
         this.idLivro = idLivro;
         this.tipo = TiposNotificacao.RESENHA_PUBLICADA;
         this.idResenha = idResenha;
         this.idUsuario = idUsuario;
+        this.nomeUsuario = nomeUsuario;
     }
 
     public enum TiposNotificacao {

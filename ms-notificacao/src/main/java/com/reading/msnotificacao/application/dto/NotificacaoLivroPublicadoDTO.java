@@ -3,6 +3,9 @@ package com.reading.msnotificacao.application.dto;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
+
+import org.hibernate.validator.constraints.URL;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,10 +23,25 @@ import lombok.ToString;
 @ToString
 public class NotificacaoLivroPublicadoDTO {
 
-    @NotEmpty
-    String tituloLivro;
-
     @NotNull
     @Positive
-    private Long idLivro;
+    private Long id;
+
+    @URL
+    private String capa;
+
+    @NotEmpty
+    private String titulo;
+
+    @NotEmpty
+    private String autor;
+
+    @NotEmpty
+    private String isbn;
+
+    @PositiveOrZero
+    private Long numeroPagina;
+
+    @NotEmpty
+    private String anoLancamento;
 }

@@ -1,5 +1,6 @@
 package com.reading.msnotificacao.application.dto;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
@@ -21,17 +22,22 @@ public class NotificacaoResenhaDTO {
 
     @NotNull
     @Positive
-    private Long idUsuario;
-
-    @NotNull
-    String tituloResenha;
+    private Long id;
 
     @NotNull
     @Positive
-    private Long idResenha;
+    private Long usuarioId;
+
+    @NotEmpty
+    private String usuarioNome;
+
+    @NotEmpty
+    private String titulo;
 
     @NotNull
     @Positive
-    private Long idLivro;
+    private Long livroId;
 
+    @NotNull
+    private String livroTitulo;
 }

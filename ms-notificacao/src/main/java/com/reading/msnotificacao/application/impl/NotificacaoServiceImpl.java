@@ -81,12 +81,12 @@ class NotificacaoServiceImpl implements NotificacaoService {
     }
 
     public Notificacao mapearParaEntidade(NotificacaoResenhaDTO request) {
-        return new Notificacao(request.getTituloResenha(), request.getIdLivro(), request.getIdResenha(),
-                request.getIdUsuario());
+        return new Notificacao(request.getTitulo(), request.getLivroId(), request.getId(), request.getUsuarioId(),
+                request.getUsuarioNome());
     }
 
     public Notificacao mapearParaEntidade(NotificacaoLivroPublicadoDTO request) {
-        return new Notificacao(request.getTituloLivro(), request.getIdLivro());
+        return new Notificacao(request.getTitulo(), request.getId());
     }
 
 }
