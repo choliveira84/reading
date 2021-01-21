@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Positive;
 
@@ -24,6 +25,8 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Leitura implements Serializable {
 
+        private static final String LIVRO_FINALIZADO = "O livro já está finalizado";
+
         /**
          *
          */
@@ -33,7 +36,7 @@ public class Leitura implements Serializable {
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
 
-        @NotEmpty
+        @NotNull
         @Positive
         @Column(nullable = false)
         private Long idUsuario;
@@ -42,7 +45,7 @@ public class Leitura implements Serializable {
         @Column(nullable = false)
         private String nomeUsuario;
 
-        @NotEmpty
+        @NotNull
         @Positive
         @Column(nullable = false)
         private Long idLivro;
@@ -62,6 +65,14 @@ public class Leitura implements Serializable {
         private NotasLivro nota;
 
         private StatusLeitura status;
+
+        public Leitura(Long defaultIdUsuario, String defaultNomeUsuario, Long defaultIdLivro,
+                        String defaultTituloLivro) {
+                this.idUsuario = defaultIdUsuario;
+                this.nomeUsuario = defaultNomeUsuario;
+                this.idLivro = defaultIdLivro;
+                this.tituloLivro = defaultTituloLivro;
+        }
 
         public enum NotasLivro {
                 UM, DOIS, TRES, QUATRO, CINCO
@@ -90,7 +101,7 @@ public class Leitura implements Serializable {
 
         public void finalizarLeitura() {
                 if (this.status != null && this.status == StatusLeitura.LIDO) {
-                        throw new BadRequestException("O livro já está finalizado");
+                        throw new BadRequestException(LIVRO_FINALIZADO);
                 }
 
                 if (this.nota == null) {
@@ -103,5 +114,13 @@ public class Leitura implements Serializable {
 
         public void atualizarNota(NotasLivro nota) {
                 this.nota = nota;
+        }
+
+        public void atualizarPagina(Long pagina) {
+                if (this.status != null && this.status == StatusLeitura.LIDO) {
+                        throw new BadRequestException(LIVRO_FINALIZADO);
+                }
+
+                this.paginaAtual = pagina;
         }
 }

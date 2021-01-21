@@ -13,6 +13,8 @@ public interface LeituraService {
 
     void atualizarNota(Long id, NotasLivro nota);
 
+    void atualizarPagina(Long id, Long pagina);
+
     void finalizarLeitura(Long id);
 
     void iniciarLeitura(Long id);

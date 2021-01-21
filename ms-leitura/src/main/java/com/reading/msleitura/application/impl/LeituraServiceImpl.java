@@ -50,6 +50,17 @@ public class LeituraServiceImpl implements LeituraService {
     }
 
     @Override
+    public void atualizarPagina(Long id, Long pagina) {
+        log.debug("Atualizando a página do livro de id {}", id);
+
+        Leitura leituraEncontrada = mapearParaEntidade(buscar(id));
+
+        leituraEncontrada.atualizarPagina(pagina);
+
+        repository.save(leituraEncontrada);
+    }
+
+    @Override
     public void finalizarLeitura(Long id) {
         log.debug("Finalizando a leitura do livro de id {}", id);
 
