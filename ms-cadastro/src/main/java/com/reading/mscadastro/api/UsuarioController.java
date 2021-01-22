@@ -1,8 +1,13 @@
 package com.reading.mscadastro.api;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import com.reading.mscadastro.application.dto.UsuarioDTO;
+import com.reading.mscadastro.application.dto.UsuarioPostDTO;
 import com.reading.mscadastro.domain.services.UsuarioService;
 
 import org.slf4j.Logger;
@@ -14,6 +19,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -48,6 +55,19 @@ public class UsuarioController {
         headers.add("X-Total-Count", Long.toString(page.getTotalElements()));
 
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    @PostMapping
+    public ResponseEntity<UsuarioDTO> criar(@Valid @RequestBody UsuarioPostDTO dto) throws URISyntaxException {
+        log.debug("Requisição para criar um usuário a partir do DTO {}", dto);
+
+        UsuarioDTO usuarioSalvo = service.criar(dto);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("X-mscadastro-created", "Usuário criado.");
+
+        return ResponseEntity.created(new URI("/api/usuarios/" + usuarioSalvo.getId())).headers(headers)
+                .body(usuarioSalvo);
     }
 
 }

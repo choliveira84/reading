@@ -3,6 +3,7 @@ package com.reading.mscadastro.application.impl;
 import java.util.Optional;
 
 import com.reading.mscadastro.application.dto.UsuarioDTO;
+import com.reading.mscadastro.application.dto.UsuarioPostDTO;
 import com.reading.mscadastro.domain.model.Usuario;
 import com.reading.mscadastro.domain.repository.UsuarioRepository;
 import com.reading.mscadastro.domain.services.UsuarioService;
@@ -45,8 +46,19 @@ class UsuarioServiceImpl implements UsuarioService {
         return repository.findAll(page).map(this::mapearParaDTO);
     }
 
+    @Override
+    public UsuarioDTO criar(UsuarioPostDTO dto) {
+        Usuario usuarioSalvo = repository.save(mapearParaEntidade(dto));
+
+        return mapearParaDTO(usuarioSalvo);
+    }
+
     private UsuarioDTO mapearParaDTO(Usuario usuario) {
         return mapper.map(usuario, UsuarioDTO.class);
+    }
+
+    private Usuario mapearParaEntidade(UsuarioPostDTO dto) {
+        return new Usuario(null, dto.getNome(), dto.getCidade(), dto.getEmail(), dto.getPais(), dto.getFoto());
     }
 
 }
