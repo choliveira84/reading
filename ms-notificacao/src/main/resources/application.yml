@@ -3,12 +3,12 @@ server:
 
 spring:
     application:
-        name: ms-notificao
+        name: ms-leitura
 
 eureka:
     client:
         service-url:
-            defaultZone: http://ms-eureka-server:8761/eureka
+            defaultZone: http://localhost:8761/eureka
     instance:
         instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
