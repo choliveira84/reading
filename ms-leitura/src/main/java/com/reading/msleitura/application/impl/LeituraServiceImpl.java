@@ -42,7 +42,7 @@ public class LeituraServiceImpl implements LeituraService {
     public void atualizarNota(Long id, NotasLivro nota) {
         log.debug("Atualizando a nota do livro de id {}", id);
 
-        Leitura leituraEncontrada = mapearParaEntidade(buscar(id));
+        Leitura leituraEncontrada = buscarLivroPorId(id);
 
         leituraEncontrada.atualizarNota(nota);
 
@@ -53,7 +53,7 @@ public class LeituraServiceImpl implements LeituraService {
     public void atualizarPagina(Long id, Long pagina) {
         log.debug("Atualizando a página do livro de id {}", id);
 
-        Leitura leituraEncontrada = mapearParaEntidade(buscar(id));
+        Leitura leituraEncontrada = buscarLivroPorId(id);
 
         leituraEncontrada.atualizarPagina(pagina);
 
@@ -64,7 +64,7 @@ public class LeituraServiceImpl implements LeituraService {
     public void finalizarLeitura(Long id) {
         log.debug("Finalizando a leitura do livro de id {}", id);
 
-        Leitura leituraEncontrada = mapearParaEntidade(buscar(id));
+        Leitura leituraEncontrada = buscarLivroPorId(id);
 
         leituraEncontrada.finalizarLeitura();
 
@@ -74,8 +74,8 @@ public class LeituraServiceImpl implements LeituraService {
     @Override
     public void iniciarLeitura(Long id) {
         log.debug("Iniciando a leitura do livro de id {}", id);
-        
-        Leitura leituraEncontrada = mapearParaEntidade(buscar(id));
+
+        Leitura leituraEncontrada = buscarLivroPorId(id);
 
         leituraEncontrada.iniciarLeitura();
 
@@ -86,7 +86,7 @@ public class LeituraServiceImpl implements LeituraService {
     public void incluirNaListaParaLer(Long id) {
         log.debug("Incluindo o livro de id {} na lista de leitura", id);
 
-        Leitura leituraEncontrada = mapearParaEntidade(buscar(id));
+        Leitura leituraEncontrada = buscarLivroPorId(id);
 
         leituraEncontrada.incluirNaListaDeLeitura();
 
@@ -100,10 +100,20 @@ public class LeituraServiceImpl implements LeituraService {
         Optional<Leitura> possivelLeitura = repository.findById(id);
 
         if (!possivelLeitura.isPresent()) {
-            throw new EntityNotFoundException(String.format("Leitura de id %s não existe", id));
-        } else {
-            return mapearParaDTO(possivelLeitura.get());
+            throw new EntityNotFoundException(String.format("Livro não existe com o id %s", id));
         }
+
+        return mapearParaDTO(possivelLeitura.get());
+    }
+
+    private Leitura buscarLivroPorId(Long id) {
+        Optional<Leitura> possivelLeitura = repository.findByIdLivro(id);
+
+        if (!possivelLeitura.isPresent()) {
+            throw new EntityNotFoundException(String.format("Livro não existe com o id %s", id));
+        }
+
+        return possivelLeitura.get();
     }
 
     @Override
@@ -116,10 +126,6 @@ public class LeituraServiceImpl implements LeituraService {
     private Leitura mapearParaEntidade(LeituraRequest dto) {
         return new Leitura(null, dto.getIdUsuario(), dto.getNomeUsuario(), dto.getIdLivro(), dto.getTituloLivro(), null,
                 null, dto.getPaginaAtual(), dto.getNota(), dto.getStatus());
-    }
-
-    private Leitura mapearParaEntidade(LeituraResponse leituraEncontrada) {
-        return mapper.map(leituraEncontrada, Leitura.class);
     }
 
     private LeituraResponse mapearParaDTO(Leitura livro) {

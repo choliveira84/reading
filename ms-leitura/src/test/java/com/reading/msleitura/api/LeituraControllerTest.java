@@ -11,8 +11,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.time.LocalDate;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-
 import com.reading.msleitura.MsLeituraApplication;
 import com.reading.msleitura.application.dto.LeituraRequest;
 import com.reading.msleitura.domain.model.Leitura;
@@ -25,7 +23,6 @@ import com.reading.msleitura.util.TestUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -73,16 +70,10 @@ public class LeituraControllerTest {
     private LeituraRepository leituraRepository;
 
     @Autowired
-    private ModelMapper mapper;
-
-    @Autowired
     private MockMvc restMockMvc;
 
     @Autowired
     private Validator validator;
-
-    @Autowired
-    private EntityManager em;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -144,8 +135,10 @@ public class LeituraControllerTest {
         leituraDTO.setIdLivro(null);
         leituraDTO.setTituloLivro(null);
 
-        restMockMvc.perform(post(API_LEITURAS).contentType(MediaType.APPLICATION_JSON)
-                .content(TestUtil.convertObjectToJsonBytes(leituraDTO))).andExpect(status().isBadRequest());
+        restMockMvc
+                .perform(post(API_LEITURAS).contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtil.convertObjectToJsonBytes(leituraDTO)))
+                .andExpect(status().isUnprocessableEntity());
 
         List<Leitura> leituraList = leituraRepository.findAll();
         assertThat(leituraList).hasSize(databaseSizeBeforeTest);
@@ -190,18 +183,9 @@ public class LeituraControllerTest {
 
         int databaseSizeBeforeUpdate = leituraRepository.findAll().size();
 
-        // Update the leitura
-        Leitura updatedLeitura = leituraRepository.findById(leitura.getId()).get();
-        // Disconnect from session so that the updates on updatedLeitura are not
-        // directly saved in db
-        em.detach(updatedLeitura);
-
-        LeituraRequest leituraDTO = mapearParaRequest(updatedLeitura);
-
-        restMockMvc
-                .perform(put(API_LEITURAS + "/{idLivro}/livro/{nota}/nota", leituraDTO.getIdLivro(), UPDATED_NOTA)
-                        .contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(leituraDTO)))
-                .andExpect(status().isOk());
+        restMockMvc.perform(
+                put(API_LEITURAS + "/atualizar-nota/{idLivro}/livro/{nota}/nota", leitura.getIdLivro(), UPDATED_NOTA))
+                .andExpect(status().isNoContent());
 
         // Validate the Leitura in the database
         List<Leitura> leituraList = leituraRepository.findAll();
@@ -221,18 +205,8 @@ public class LeituraControllerTest {
 
         int databaseSizeBeforeUpdate = leituraRepository.findAll().size();
 
-        // Update the leitura
-        Leitura updatedLeitura = leituraRepository.findById(leitura.getId()).get();
-        // Disconnect from session so that the updates on updatedLeitura are not
-        // directly saved in db
-        em.detach(updatedLeitura);
-
-        LeituraRequest leituraDTO = mapearParaRequest(updatedLeitura);
-
-        restMockMvc
-                .perform(put(API_LEITURAS + "/{idLivro}/livro", leituraDTO.getIdLivro())
-                        .contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(leituraDTO)))
-                .andExpect(status().isOk());
+        restMockMvc.perform(put(API_LEITURAS + "/iniciar-leitura/{idLivro}/livro", leitura.getIdLivro()))
+                .andExpect(status().isNoContent());
 
         // Validate the Leitura in the database
         List<Leitura> leituraList = leituraRepository.findAll();
@@ -253,18 +227,8 @@ public class LeituraControllerTest {
 
         int databaseSizeBeforeUpdate = leituraRepository.findAll().size();
 
-        // Update the leitura
-        Leitura updatedLeitura = leituraRepository.findById(leitura.getId()).get();
-        // Disconnect from session so that the updates on updatedLeitura are not
-        // directly saved in db
-        em.detach(updatedLeitura);
-
-        LeituraRequest leituraDTO = mapearParaRequest(updatedLeitura);
-
-        restMockMvc
-                .perform(put(API_LEITURAS + "/{idLivro}/livro", leituraDTO.getIdLivro())
-                        .contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(leituraDTO)))
-                .andExpect(status().isOk());
+        restMockMvc.perform(put(API_LEITURAS + "/incluir/{idLivro}/livro", leitura.getIdLivro()))
+                .andExpect(status().isNoContent());
 
         // Validate the Leitura in the database
         List<Leitura> leituraList = leituraRepository.findAll();
@@ -288,18 +252,8 @@ public class LeituraControllerTest {
 
         int databaseSizeBeforeUpdate = leituraRepository.findAll().size();
 
-        // Update the leitura
-        Leitura updatedLeitura = leituraRepository.findById(leitura.getId()).get();
-        // Disconnect from session so that the updates on updatedLeitura are not
-        // directly saved in db
-        em.detach(updatedLeitura);
-
-        LeituraRequest leituraDTO = mapearParaRequest(updatedLeitura);
-
-        restMockMvc
-                .perform(put(API_LEITURAS + "/{idLivro}/livro", leituraDTO.getIdLivro())
-                        .contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(leituraDTO)))
-                .andExpect(status().isOk());
+        restMockMvc.perform(put(API_LEITURAS + "/finalizar-leitura/{idLivro}/livro", leitura.getIdLivro()))
+                .andExpect(status().isNoContent());
 
         // Validate the Leitura in the database
         List<Leitura> leituraList = leituraRepository.findAll();
@@ -326,18 +280,8 @@ public class LeituraControllerTest {
 
         int databaseSizeBeforeUpdate = leituraRepository.findAll().size();
 
-        // Update the leitura
-        Leitura updatedLeitura = leituraRepository.findById(leitura.getId()).get();
-        // Disconnect from session so that the updates on updatedLeitura are not
-        // directly saved in db
-        em.detach(updatedLeitura);
-
-        LeituraRequest leituraDTO = mapearParaRequest(updatedLeitura);
-
-        restMockMvc.perform(
-                put(API_LEITURAS + "/{idLivro}/livro/{pagina}/pagina", leituraDTO.getIdLivro(), UPDATED_PAGINA_ATUAL)
-                        .contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(leituraDTO)))
-                .andExpect(status().isOk());
+        restMockMvc.perform(put(API_LEITURAS + "/atualizar-pagina/{idLivro}/livro/{pagina}/pagina",
+                leitura.getIdLivro(), UPDATED_PAGINA_ATUAL)).andExpect(status().isNoContent());
 
         // Validate the Leitura in the database
         List<Leitura> leituraList = leituraRepository.findAll();
@@ -350,7 +294,4 @@ public class LeituraControllerTest {
         assertThat(testLeitura.getPaginaAtual()).isEqualTo(UPDATED_PAGINA_ATUAL);
     }
 
-    private LeituraRequest mapearParaRequest(Leitura livro) {
-        return mapper.map(livro, LeituraRequest.class);
-    }
 }
