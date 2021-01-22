@@ -1,6 +1,10 @@
 server:
     port: ${PORT:0}
 
+spring:
+    application:
+        name: ms-notificao
+
 eureka:
     client:
         service-url:
@@ -18,24 +22,3 @@ hystrix:
 ribbon:
     ConnectTimeout: 10000
     ReadTimeout: 20000  
-
-spring:
-    application:
-        name: ms-notificacao
-    h2:
-        console:
-            enabled: true
-            path: /h2-console
-    datasource:
-        driver-class-name: org.h2.Driver
-        url: jdbc:h2:mem:msnotificacao;MODE=MYSQL;DB_CLOSE_DELAY=-1
-        username: sa
-        password: 
-    jpa:
-        show-sql: true
-        properties:
-            hibernate:
-                format_sql: true
-        database-platform: org.hibernate.dialect.H2Dialect
-        hibernate:
-            ddl-auto: update
