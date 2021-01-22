@@ -21,6 +21,7 @@ import com.reading.msleitura.infrastructure.exceptions.ResourceExceptionHandler;
 import com.reading.msleitura.util.TestUtil;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -221,6 +222,45 @@ public class LeituraControllerTest {
 
     @Test
     @Transactional
+    @DisplayName("Testando a iniciação de um livro já iniciado anteriormente pelo status")
+    public void iniciarLeituraDeUmLivroJaSendoLido1() throws Exception {
+        // Initialize the database
+        Leitura leituraASerSalva = criarEntidade();
+        ReflectionTestUtils.setField(leituraASerSalva, "status", STATUS_LENDO);
+        Leitura leitura = leituraRepository.saveAndFlush(leituraASerSalva);
+
+        restMockMvc.perform(put(API_LEITURAS + "/iniciar-leitura/{idLivro}/livro", leitura.getIdLivro()))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("Testando a iniciação de um livro já iniciado anteriormente pela data")
+    public void iniciarLeituraDeUmLivroJaSendoLido2() throws Exception {
+        // Initialize the database
+        Leitura leituraASerSalva = criarEntidade();
+        ReflectionTestUtils.setField(leituraASerSalva, "dataInicio", DEFAULT_DATA_INICIO);
+        Leitura leitura = leituraRepository.saveAndFlush(leituraASerSalva);
+
+        restMockMvc.perform(put(API_LEITURAS + "/iniciar-leitura/{idLivro}/livro", leitura.getIdLivro()))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("Testando a inclusão de um livro já incluido anteriormente pelo status")
+    public void incluirLeituraDeUmLivroJaIncluido() throws Exception {
+        // Initialize the database
+        Leitura leituraASerSalva = criarEntidade();
+        ReflectionTestUtils.setField(leituraASerSalva, "status", STATUS_A_LER);
+        Leitura leitura = leituraRepository.saveAndFlush(leituraASerSalva);
+
+        restMockMvc.perform(put(API_LEITURAS + "/incluir/{idLivro}/livro", leitura.getIdLivro()))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
     public void incluirNaListaParaLer() throws Exception {
         // Initialize the database
         Leitura leitura = leituraRepository.saveAndFlush(criarEntidade());
@@ -270,6 +310,31 @@ public class LeituraControllerTest {
 
     @Test
     @Transactional
+    @DisplayName("Testando a finalização de um livro já finalizado anteriormente pelo status")
+    public void finalizarLeituraDeUmLivroJaFinalizado() throws Exception {
+        // Initialize the database
+        Leitura leituraASerSalva = criarEntidade();
+        ReflectionTestUtils.setField(leituraASerSalva, "status", STATUS_LIDO);
+        Leitura leitura = leituraRepository.saveAndFlush(leituraASerSalva);
+
+        restMockMvc.perform(put(API_LEITURAS + "/finalizar-leitura/{idLivro}/livro", leitura.getIdLivro()))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("Testando a finalização de um livro sem nota")
+    public void finalizarLeituraDeUmLivroSemNota() throws Exception {
+        // Initialize the database
+        Leitura leituraASerSalva = criarEntidade();
+        Leitura leitura = leituraRepository.saveAndFlush(leituraASerSalva);
+
+        restMockMvc.perform(put(API_LEITURAS + "/finalizar-leitura/{idLivro}/livro", leitura.getIdLivro()))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
     public void atualizarPagina() throws Exception {
         // Initialize the database
         Leitura leituraASerSalva = criarEntidade();
@@ -292,6 +357,19 @@ public class LeituraControllerTest {
         assertThat(testLeitura.getTituloLivro()).isEqualTo(DEFAULT_TITULO_LIVRO);
         assertThat(testLeitura.getDataInicio()).isEqualTo(DEFAULT_DATA_INICIO);
         assertThat(testLeitura.getPaginaAtual()).isEqualTo(UPDATED_PAGINA_ATUAL);
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("Testando a atualizar a página de um livro lido")
+    public void atualizarPaginaDeUmLivroLido() throws Exception {
+        // Initialize the database
+        Leitura leituraASerSalva = criarEntidade();
+        ReflectionTestUtils.setField(leituraASerSalva, "status", STATUS_LIDO);
+        Leitura leitura = leituraRepository.saveAndFlush(leituraASerSalva);
+
+        restMockMvc.perform(put(API_LEITURAS + "/atualizar-pagina/{idLivro}/livro/{pagina}/pagina",
+                leitura.getIdLivro(), DEFAULT_PAGINA_ATUAL)).andExpect(status().isBadRequest());
     }
 
 }

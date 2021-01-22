@@ -25,6 +25,8 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Leitura implements Serializable {
 
+        private static final String LIVRO_SENDO_LIDO = "O livro já está sendo lido";
+
         private static final String LIVRO_FINALIZADO = "O livro já está finalizado";
 
         /**
@@ -92,7 +94,10 @@ public class Leitura implements Serializable {
 
         public void iniciarLeitura() {
                 if (this.status != null && this.status == StatusLeitura.LENDO) {
-                        throw new BadRequestException("O livro já está sendo lido");
+                        throw new BadRequestException(LIVRO_SENDO_LIDO);
+                }
+                if (this.dataInicio != null) {
+                        throw new BadRequestException(LIVRO_SENDO_LIDO);
                 }
 
                 this.status = StatusLeitura.LENDO;
