@@ -3,7 +3,7 @@ server:
 
 spring:
     application:
-        name: ms-notificao
+        name: ms-notificacao
 
 eureka:
     client:
