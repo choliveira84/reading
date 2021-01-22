@@ -15,6 +15,7 @@ import com.reading.mscadastro.domain.services.LivroService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -28,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-
+@RefreshScope
 @RestController
 @RequestMapping("/api/livros")
 public class LivroController {
