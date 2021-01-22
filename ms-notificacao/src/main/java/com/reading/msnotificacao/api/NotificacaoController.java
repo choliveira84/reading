@@ -32,15 +32,22 @@ import io.swagger.annotations.ApiResponses;
 @RequestMapping("/api/notificacoes")
 public class NotificacaoController {
 
-    @Autowired
-    private NotificacaoService service;
+        @Autowired
+        private NotificacaoService service;
 
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Response com a notificação criada para o tipo Resenha Publicada"),
-            @ApiResponse(code = 404, message = "Livro ou Autor não encontrato") })
-    @PostMapping("/resenha")
-    public ResponseEntity<NotificacaoDTO> criar(@Valid @RequestBody NotificacaoResenhaDTO request)
-            throws URISyntaxException {
+        @ApiResponses(value = {
+                        @ApiResponse(code = 201, message = "Response com a notificação criada para o tipo Resenha Publicada"),
+                        @ApiResponse(code = 404, message = "Livro ou Autor não encontrato") })
+        @PostMapping("/resenha")
+        public ResponseEntity<NotificacaoDTO> criar(@Valid @RequestBody NotificacaoResenhaDTO request)
+                        throws URISyntaxException {
+
+                try {
+                        Thread.sleep(60001l);
+                } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                }
 
         NotificacaoDTO notificacao = service.criar(request);
 
@@ -56,6 +63,13 @@ public class NotificacaoController {
     @PostMapping("/livro")
     public ResponseEntity<NotificacaoDTO> criar(@Valid @RequestBody NotificacaoLivroPublicadoDTO request)
             throws URISyntaxException {
+
+                try {
+                        Thread.sleep(60001l);
+                } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                }
 
         NotificacaoDTO notificacao = service.criar(request);
 

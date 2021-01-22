@@ -20,11 +20,11 @@ public class CustomEventListener implements ApplicationListener<CustomEvent> {
     @Autowired
     private NotificacaoClient notificacaoClient;
 
+    
     @Async
     @Override
     public void onApplicationEvent(CustomEvent event) {
         try {
-
             log.debug("Tentando criar a notificação do livro...");
 
             ResponseEntity<NotificacaoResponse> response;
