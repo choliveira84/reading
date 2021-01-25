@@ -10,9 +10,8 @@ Foi utilizado o Docker para subir o banco. Comando para execução:
 ```
 $ docker pull mysql:8.0.20
 $ docker run -p 3306:3306 --name mscadastro --network reading -e MYSQL_USER=root -e MYSQL_ALLOW_EMPTY_PASSWORD=yes -e MYSQL_DATABASE=mscadastro mysql:8.0.20
-$ docker run -p 3307:3306 --name msnotificacao --network reading -e MYSQL_USER=root -e MYSQL_ALLOW_EMPTY_PASSWORD=yes -e MYSQL_DATABASE=msnotificacao mysql:8.0.20
-$ docker run -p 3308:3306 --name msleitura --network reading -e MYSQL_USER=root -e MYSQL_ALLOW_EMPTY_PASSWORD=yes -e MYSQL_DATABASE=msleitura mysql:8.0.20
 ```
+*obs: Só um único comando vai ser suficiente para subir o servidor do banco. Ao executar o projeto, o mesmo irá apontar para o mesmo servidor dos 3 projetos (porta 3306)*
 
 ### Módulos
 
